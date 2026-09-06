@@ -4,6 +4,7 @@ import { ChevronDown, Cpu, Layers3 } from 'lucide-react';
 import { scenes } from './data/scenes';
 import ExplodedComponentSection from './components/ExplodedComponentSection';
 import MasterDroneExploder from './components/PranaWebGL';
+import SystemSignalFlow from './components/SystemSignalFlow';
 import Preloader from './components/Preloader';
 import useSteadyScroll from './hooks/useSteadyScroll';
 import './styles.css';
@@ -47,8 +48,10 @@ function App() {
               <Layers3 size={62} /><i /><Cpu size={112} /><i />
               <b>CONTROL · POWER · SENSORS<br />THERMAL · DATA · PROTECTION</b>
             </div>
-            <footer>SCROLL TO INSPECT <ChevronDown size={17} /></footer>
+            <footer>SCROLL TO TRACE THE SYSTEM <ChevronDown size={17} /></footer>
           </section>
+
+          <SystemSignalFlow />
 
           <nav aria-label="Component progression">
             <i />
