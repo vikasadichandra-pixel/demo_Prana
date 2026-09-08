@@ -1,13 +1,221 @@
-:root { --preloader-bg:#030705; --preloader-ink:#ecf0ea; --preloader-lime:#c9e87b; --preloader-cyan:#58d3ff; }
-.preloader { position:fixed; inset:0; z-index:10000; overflow:hidden; background:var(--preloader-bg); font-family:'DM Mono','Courier New',monospace; }
-.preloader__canvas { position:absolute; inset:0; z-index:2; pointer-events:none; }
-.preloader__ui { position:absolute; inset:0; z-index:3; display:flex; align-items:center; justify-content:center; pointer-events:none; }
-.preloader__content { display:flex; flex-direction:column; align-items:center; gap:2rem; text-align:center; }
-.preloader__telemetry { display:flex; gap:12px; font-size:11px; letter-spacing:3px; color:var(--preloader-ink); }
-.preloader__badge { color:var(--preloader-lime); font-weight:500; }
-.preloader__sep { color:var(--preloader-cyan); }
-.preloader__text-anchor { position:relative; }
-.preloader__text-loader { position:relative; font-size:clamp(80px,18vw,240px); font-weight:800; line-height:1; letter-spacing:-2px; transform-origin:center; will-change:transform; }
-.preloader__text-base { color:var(--preloader-lime); text-shadow:0 0 60px rgba(201,232,123,.5); }
-.preloader__text-fill { position:absolute; inset:0; color:var(--preloader-bg); -webkit-text-stroke:2px var(--preloader-cyan); will-change:clip-path; }
-@media(max-width:600px) { .preloader__telemetry { font-size:7px; letter-spacing:1.4px; gap:8px; }.preloader__content { gap:1.4rem; }.preloader__text-loader { font-size:clamp(64px,20vw,120px); letter-spacing:-2px; } }
+:root {
+  --preloader-bg: #04080e;
+  --preloader-ink: #e6eef3;
+  --preloader-muted: #8193a0;
+  --preloader-line: rgba(177, 204, 219, .22);
+}
+
+.preloader {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  overflow: hidden;
+  background: var(--preloader-bg);
+  color: var(--preloader-ink);
+  font-family: 'DM Mono', 'Courier New', monospace;
+  opacity: 1;
+  transition: opacity .88s cubic-bezier(.2,.72,.18,1);
+  will-change: opacity;
+  isolation: isolate;
+}
+
+.preloader.is-leaving {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.preloader::before,
+.preloader::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+}
+
+.preloader::before {
+  background:
+    radial-gradient(ellipse at 50% 44%, transparent 28%, rgba(1, 4, 8, .12) 62%, rgba(1, 3, 6, .62) 100%),
+    linear-gradient(180deg, rgba(1, 4, 8, .22), transparent 22%, transparent 72%, rgba(1, 4, 8, .36));
+}
+
+.preloader::after {
+  opacity: .12;
+  background: repeating-linear-gradient(
+    180deg,
+    rgba(255,255,255,.022) 0,
+    rgba(255,255,255,.022) 1px,
+    transparent 1px,
+    transparent 4px
+  );
+  mix-blend-mode: soft-light;
+}
+
+.preloader__canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  transform: translateZ(0);
+}
+
+.preloader__canvas canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.preloader__hud {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  pointer-events: none;
+}
+
+.preloader__hud::before,
+.preloader__hud::after {
+  content: '';
+  position: absolute;
+  top: clamp(24px, 4vw, 58px);
+  width: clamp(46px, 6vw, 96px);
+  height: 1px;
+  background: linear-gradient(90deg, rgba(195,219,231,.42), transparent);
+}
+
+.preloader__hud::before { left: clamp(24px, 4vw, 64px); }
+.preloader__hud::after {
+  right: clamp(24px, 4vw, 64px);
+  transform: scaleX(-1);
+}
+
+.preloader__hud-block {
+  position: absolute;
+  top: clamp(30px, 4.6vw, 72px);
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  text-transform: uppercase;
+  letter-spacing: 2.2px;
+  text-shadow: 0 2px 20px rgba(0,0,0,.8);
+}
+
+.preloader__hud-block--left {
+  left: clamp(24px, 4vw, 64px);
+  align-items: flex-start;
+}
+
+.preloader__hud-block--right {
+  right: clamp(24px, 4vw, 64px);
+  align-items: flex-end;
+  text-align: right;
+}
+
+.preloader__hud-block b {
+  color: #eef4f7;
+  font: 600 clamp(10px, .78vw, 13px)/1 'DM Mono', monospace;
+  letter-spacing: 2.7px;
+}
+
+.preloader__hud-block span {
+  color: var(--preloader-muted);
+  font: 500 clamp(7px, .58vw, 9px)/1.4 'DM Mono', monospace;
+}
+
+.preloader__hud-foot {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(24px, 4.3vw, 58px);
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(10px, 1.4vw, 20px);
+  width: min(760px, calc(100% - 48px));
+  color: #6f818d;
+  font: 500 clamp(7px, .56vw, 9px)/1 'DM Mono', monospace;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  white-space: nowrap;
+  text-shadow: 0 2px 18px rgba(0,0,0,.9);
+}
+
+.preloader__hud-foot i {
+  display: block;
+  width: clamp(30px, 5vw, 74px);
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(193,219,232,.42), transparent);
+}
+
+.preloader__fallback-mark {
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  color: #dce6eb;
+  font: 800 clamp(64px, 14vw, 210px)/1 Manrope, Arial, sans-serif;
+  letter-spacing: -.07em;
+  text-shadow: 0 0 70px rgba(158, 195, 214, .2);
+  transition: opacity .3s ease;
+}
+
+.preloader.is-fallback .preloader__fallback-mark {
+  opacity: .88;
+}
+
+@media (max-width: 720px) {
+  .preloader__hud-block {
+    top: 24px;
+    gap: 5px;
+  }
+
+  .preloader__hud-block--left { left: 18px; }
+  .preloader__hud-block--right { right: 18px; }
+
+  .preloader__hud::before {
+    left: 18px;
+    top: 18px;
+  }
+
+  .preloader__hud::after {
+    right: 18px;
+    top: 18px;
+  }
+
+  .preloader__hud-block b {
+    font-size: 8px;
+    letter-spacing: 1.7px;
+  }
+
+  .preloader__hud-block span {
+    font-size: 6px;
+    letter-spacing: 1.25px;
+  }
+
+  .preloader__hud-block--right span:nth-child(2) {
+    display: none;
+  }
+
+  .preloader__hud-foot {
+    bottom: 22px;
+    width: calc(100% - 36px);
+    gap: 8px;
+    font-size: 6px;
+    letter-spacing: 1.2px;
+  }
+
+  .preloader__hud-foot span:last-child {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .preloader {
+    transition-duration: .25s;
+  }
+
+  .preloader::after {
+    display: none;
+  }
+}
