@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useGLTF, useProgress } from '@react-three/drei';
-import LadakhPreloaderScene from './LadakhPreloaderScene';
+import LadakhPreloaderScenePro from './LadakhPreloaderScenePro';
 import './Preloader.css';
 
 const MAIN_MODEL = `${import.meta.env.BASE_URL}models/prana-survival.glb?v=3`;
@@ -81,7 +81,7 @@ export default function Preloader({ onComplete, onReveal }) {
       <div className="preloader__canvas" aria-hidden="true">
         {!failed && (
           <PreloaderBoundary onFailure={() => setFailed(true)}>
-            <LadakhPreloaderScene loadProgress={loadProgress} onSequenceComplete={finish} />
+            <LadakhPreloaderScenePro loadProgress={loadProgress} onSequenceComplete={finish} />
           </PreloaderBoundary>
         )}
       </div>
